@@ -1,4 +1,4 @@
-import { colors, fromMarkdown } from "./deps.ts";
+import { colors, fromMarkdown, stringWidth } from "./deps.ts";
 import type { MdastOptions } from "./mod.ts";
 import type { Node } from "./nodeTypes.ts";
 
@@ -79,14 +79,14 @@ export function generateTable(markdownTable: string, borders?: boolean) {
     });
 
   const maxCol = Math.max(...grid.map((row) => row.length));
-  const cellWidths = [];
+  const cellWidths: number[] = [];
 
   const cellPadding = 1;
   const paddingString = " ".repeat(cellPadding);
 
   for (let i = 0; i < maxCol; i++) {
     // if second row/alingment row, ignore it's length
-    const cellMax = Math.max(...grid.map((row, ri) => colors.stripColor(ri === 1 ? "" : (row[i] || "").trim()).length));
+    const cellMax = Math.max(...grid.map((row, ri) => stringWidth((ri === 1 ? "" : (row[i] || "").trim()))));
     cellWidths.push(cellMax);
 
     const align = grid[1][i]?.trim() || ":--"; // defaults to left, to give chance to render markdown, not to throw
@@ -108,7 +108,7 @@ export function generateTable(markdownTable: string, borders?: boolean) {
         cellContent = colors.blue(colors.bold(cellContent));
       }
       // add stipped length to padding
-      const strippedDiff = cellContent.length - colors.stripColor(cellContent).length;
+      const strippedDiff = cellContent.length - stringWidth(cellContent);
       const diff = (cellMax - cellContent.length) + strippedDiff;
       d[i] = paddingString + getAlignedCellText(cellContent, cellAlign, diff) + paddingString;
       return d;

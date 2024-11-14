@@ -1,4 +1,5 @@
 export * as colors from "jsr:@std/fmt@0.223.0/colors";
+export { default as stringWidth } from "https://esm.sh/string-width@7.2.0";
 
 import { gfmStrikethrough, gfmStrikethroughFromMarkdown, mdast } from "./mdast-util-from-markdown@1_2_0-shimmed.js";
 export const strikethroughExt = gfmStrikethroughFromMarkdown;
